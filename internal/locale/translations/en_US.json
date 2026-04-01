@@ -603,6 +603,11 @@
     "pagination.previous": "Previous",
     "search.label": "Search",
     "search.placeholder": "Search…",
+    "search.use_like": "Use partial match search",
+    "search.title_only": "Search titles only",
+    "search.filter_categories": "Filter by categories",
+    "search.categories_select_all": "Select all categories",
+    "search.categories_clear": "Clear categories",
     "search.submit": "Search",
     "skip_to_content": "Skip to content",
     "time_elapsed.days": [

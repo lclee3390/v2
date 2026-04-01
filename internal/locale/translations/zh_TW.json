@@ -591,6 +591,11 @@
     "pagination.previous": "上一頁",
     "search.label": "搜尋",
     "search.placeholder": "搜尋…",
+    "search.use_like": "使用 LIKE 模糊搜尋",
+    "search.title_only": "只搜尋標題",
+    "search.filter_categories": "依分類篩選",
+    "search.categories_select_all": "全選分類",
+    "search.categories_clear": "取消全選",
     "search.submit": "送出",
     "skip_to_content": "跳到主要內容",
     "time_elapsed.days": [

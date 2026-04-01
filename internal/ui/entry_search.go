@@ -5,6 +5,8 @@ package ui // import "miniflux.app/v2/internal/ui"
 
 import (
 	"net/http"
+	"strconv"
+	"strings"
 
 	"miniflux.app/v2/internal/http/request"
 	"miniflux.app/v2/internal/http/response"
@@ -22,9 +24,28 @@ func (h *handler) showSearchEntryPage(w http.ResponseWriter, r *http.Request) {
 
 	entryID := request.RouteInt64Param(r, "entryID")
 	searchQuery := request.QueryStringParam(r, "q", "")
-	unreadOnly := request.QueryBoolParam(r, "unread", false)
+	unreadOnly := true
+	if request.HasQueryParam(r, "unread") {
+		unreadOnly = request.QueryBoolParam(r, "unread", false)
+	}
+	useLikeSearch := true
+	if request.HasQueryParam(r, "like") {
+		useLikeSearch = request.QueryBoolParam(r, "like", false)
+	}
+	titleOnly := true
+	if request.HasQueryParam(r, "title_only") {
+		titleOnly = request.QueryBoolParam(r, "title_only", false)
+	}
+	categoryParams := request.QueryStringParamList(r, "categories")
+	var categoryIDs []int64
+	for _, cat := range categoryParams {
+		if id, err := strconv.ParseInt(strings.TrimSpace(cat), 10, 64); err == nil && id > 0 {
+			categoryIDs = append(categoryIDs, id)
+		}
+	}
 	builder := h.store.NewEntryQueryBuilder(user.ID)
-	builder.WithSearchQuery(searchQuery)
+	builder.WithSearchQuery(searchQuery, useLikeSearch, titleOnly)
+	builder.WithCategoryIDs(categoryIDs)
 	builder.WithEntryID(entryID)
 
 	entry, err := builder.GetEntry()
@@ -54,7 +75,8 @@ func (h *handler) showSearchEntryPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	entryPaginationBuilder := storage.NewEntryPaginationBuilder(h.store, user.ID, entry.ID, user.EntryOrder, user.EntryDirection)
-	entryPaginationBuilder.WithSearchQuery(searchQuery)
+	entryPaginationBuilder.WithSearchQuery(searchQuery, useLikeSearch, titleOnly)
+	entryPaginationBuilder.WithCategoryIDs(categoryIDs)
 	if unreadOnly {
 		if entry.Status == model.EntryStatusRead {
 			entryPaginationBuilder.WithStatusOrEntryID(model.EntryStatusUnread, entry.ID)
@@ -82,6 +104,9 @@ func (h *handler) showSearchEntryPage(w http.ResponseWriter, r *http.Request) {
 	view := view.New(h.tpl, r)
 	view.Set("searchQuery", searchQuery)
 	view.Set("searchUnreadOnly", unreadOnly)
+	view.Set("searchUseLike", useLikeSearch)
+	view.Set("searchTitleOnly", titleOnly)
+	view.Set("searchSelectedCategories", categoryIDs)
 	view.Set("entry", entry)
 	view.Set("prevEntry", prevEntry)
 	view.Set("nextEntry", nextEntry)

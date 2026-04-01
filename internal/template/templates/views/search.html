@@ -13,7 +13,23 @@
             <input type="search" name="q" id="search-input" aria-label="{{ t "search.label" }}" placeholder="{{ t "search.placeholder" }}" {{ if $.searchQuery }}value="{{ .searchQuery }}"{{ else }}autofocus{{ end }} required>
             <button type="submit" class="button button-primary" data-label-loading="{{ t "form.submit.loading" }}">{{ t "search.submit" }}</button>
         </div>
-        <label class="search-filter"><input type="checkbox" name="unread" value="1" {{ if $.searchUnreadOnly }}checked{{ end }}> {{ t "menu.show_only_unread_entries" }}</label>
+        <label class="search-filter"><input type="checkbox" name="unread" value="1" {{ if $.searchUnreadOnly }}checked{{ end }}> {{ t "menu.show_only_unread_entries" }}</label><input type="hidden" name="unread" value="0">
+        <label class="search-filter"><input type="checkbox" name="like" value="1" {{ if $.searchUseLike }}checked{{ end }}> {{ t "search.use_like" }}</label><input type="hidden" name="like" value="0">
+        <label class="search-filter"><input type="checkbox" name="title_only" value="1" {{ if $.searchTitleOnly }}checked{{ end }}> {{ t "search.title_only" }}</label><input type="hidden" name="title_only" value="0">
+        {{ if .categories }}
+        <fieldset class="search-filter-group">
+            <legend>{{ t "search.filter_categories" }}</legend>
+            <div class="search-filter-actions">
+                <button type="button" class="button button-muted" data-action="categories-select-all">{{ t "search.categories_select_all" }}</button>
+                <button type="button" class="button button-muted" data-action="categories-clear">{{ t "search.categories_clear" }}</button>
+            </div>
+            <div class="search-filter-list">
+                {{ range .categories }}
+                    <label class="search-filter"><input type="checkbox" name="categories" value="{{ .ID }}" {{ if index $.searchSelectedCategorySet .ID }}checked{{ end }}> {{ .Title }}</label>
+                {{ end }}
+            </div>
+        </fieldset>
+        {{ end }}
     </form>
 </search>
 
@@ -33,7 +49,7 @@
             >
                 <header class="item-header" dir="auto">
                     <h2 id="entry-title-{{ .ID }}" class="item-title">
-                        <a href="{{ routePath "/search/entry/%d" .ID }}{{ queryString (dict "q" $.searchQuery "unread" $.searchUnreadOnly) }}" {{ if and $.user.AlwaysOpenExternalLinks $.user.OpenExternalLinksInNewTab }}target="_blank"{{ end }}>
+                        <a href="{{ routePath "/search/entry/%d" .ID }}{{ queryString (dict "q" $.searchQuery "unread" (queryBool $.searchUnreadOnly) "like" (queryBool $.searchUseLike) "title_only" (queryBool $.searchTitleOnly) "categories" $.searchSelectedCategories) }}" {{ if and $.user.AlwaysOpenExternalLinks $.user.OpenExternalLinksInNewTab }}target="_blank"{{ end }}>
                             {{ if ne .Feed.Icon.IconID 0 }}
                             <img src="{{ routePath "/feed-icon/%s" .Feed.Icon.ExternalIconID }}" width="16" height="16" loading="lazy" alt="{{ .Feed.Title }}">
                             {{ else }}

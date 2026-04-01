@@ -615,6 +615,11 @@
     "pagination.previous": "Попередня",
     "search.label": "Пошук",
     "search.placeholder": "Шукати...",
+    "search.use_like": "Use partial match search",
+    "search.title_only": "Search titles only",
+    "search.filter_categories": "Filter by categories",
+    "search.categories_select_all": "Select all categories",
+    "search.categories_clear": "Clear categories",
     "search.submit": "Знайти",
     "skip_to_content": "Перейти до вмісту",
     "time_elapsed.days": [

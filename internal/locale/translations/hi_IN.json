@@ -603,6 +603,11 @@
     "pagination.previous": "पिछला",
     "search.label": "खोजे",
     "search.placeholder": "खोजे...",
+    "search.use_like": "Use partial match search",
+    "search.title_only": "Search titles only",
+    "search.filter_categories": "Filter by categories",
+    "search.categories_select_all": "Select all categories",
+    "search.categories_clear": "Clear categories",
     "search.submit": "खोजें",
     "skip_to_content": "सामग्री पर जाएं",
     "time_elapsed.days": [

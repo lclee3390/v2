@@ -603,6 +603,11 @@
     "pagination.previous": "Edellinen",
     "search.label": "Haku",
     "search.placeholder": "Hae...",
+    "search.use_like": "Use partial match search",
+    "search.title_only": "Search titles only",
+    "search.filter_categories": "Filter by categories",
+    "search.categories_select_all": "Select all categories",
+    "search.categories_clear": "Clear categories",
     "search.submit": "Hae",
     "skip_to_content": "Siirry sisältöön",
     "time_elapsed.days": [

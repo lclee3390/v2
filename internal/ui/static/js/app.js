@@ -1265,6 +1265,22 @@ function initializeClickHandlers() {
             handleOriginalLink(event);
         }
     }, true);
+
+    // Search category helpers
+    onClick("button[data-action=categories-select-all]", (event) => {
+        const form = event.target.closest("form");
+        if (!form) return;
+        form.querySelectorAll('input[type="checkbox"][name="categories"]').forEach((checkbox) => {
+            checkbox.checked = true;
+        });
+    });
+    onClick("button[data-action=categories-clear]", (event) => {
+        const form = event.target.closest("form");
+        if (!form) return;
+        form.querySelectorAll('input[type="checkbox"][name="categories"]').forEach((checkbox) => {
+            checkbox.checked = false;
+        });
+    });
 }
 
 // Initialize application handlers

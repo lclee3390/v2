@@ -8,6 +8,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"miniflux.app/v2/internal/config"
@@ -550,6 +551,18 @@ func configureFilters(builder *storage.EntryQueryBuilder, r *http.Request) {
 	}
 
 	if searchQuery := request.QueryStringParam(r, "search", ""); searchQuery != "" {
-		builder.WithSearchQuery(searchQuery)
+		useLikeSearch := request.QueryBoolParam(r, "search_like", false)
+		titleOnly := request.QueryBoolParam(r, "search_title_only", false)
+		builder.WithSearchQuery(searchQuery, useLikeSearch, titleOnly)
+	}
+
+	var categoryIDs []int64
+	for _, cat := range request.QueryStringParamList(r, "search_categories") {
+		if id, err := strconv.ParseInt(strings.TrimSpace(cat), 10, 64); err == nil && id > 0 {
+			categoryIDs = append(categoryIDs, id)
+		}
+	}
+	if len(categoryIDs) > 0 {
+		builder.WithCategoryIDs(categoryIDs)
 	}
 }

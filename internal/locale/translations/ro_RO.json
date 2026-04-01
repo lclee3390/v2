@@ -615,6 +615,11 @@
     "pagination.previous": "Anterior",
     "search.label": "Caută",
     "search.placeholder": "Caută…",
+    "search.use_like": "Use partial match search",
+    "search.title_only": "Search titles only",
+    "search.filter_categories": "Filter by categories",
+    "search.categories_select_all": "Select all categories",
+    "search.categories_clear": "Clear categories",
     "search.submit": "Caută",
     "skip_to_content": "Sari la conținut",
     "time_elapsed.days": [

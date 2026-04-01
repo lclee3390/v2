@@ -603,6 +603,11 @@
     "pagination.previous": "Προηγούμενη",
     "search.label": "Αναζήτηση",
     "search.placeholder": "Αναζήτηση...",
+    "search.use_like": "Use partial match search",
+    "search.title_only": "Search titles only",
+    "search.filter_categories": "Filter by categories",
+    "search.categories_select_all": "Select all categories",
+    "search.categories_clear": "Clear categories",
     "search.submit": "Αναζήτηση",
     "skip_to_content": "Μετάβαση στο περιεχόμενο",
     "time_elapsed.days": [

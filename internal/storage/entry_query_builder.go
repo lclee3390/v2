@@ -42,10 +42,32 @@ func (e *EntryQueryBuilder) WithoutContent() *EntryQueryBuilder {
 	return e
 }
 
-// WithSearchQuery adds full-text search query to the condition.
-func (e *EntryQueryBuilder) WithSearchQuery(query string) *EntryQueryBuilder {
+// WithSearchQuery adds a search query to the condition.
+func (e *EntryQueryBuilder) WithSearchQuery(query string, useLikeSearch bool, titleOnly bool) *EntryQueryBuilder {
 	if query != "" {
 		nArgs := len(e.args) + 1
+		if useLikeSearch {
+			if titleOnly {
+				e.conditions = append(e.conditions, fmt.Sprintf("e.title ILIKE $%d", nArgs))
+			} else {
+				e.conditions = append(e.conditions, fmt.Sprintf("(e.title ILIKE $%[1]d OR coalesce(e.content, '') ILIKE $%[1]d)", nArgs))
+			}
+			e.args = append(e.args, "%"+query+"%")
+			e.WithSorting("e.published_at", "DESC")
+			e.WithSorting("e.id", "DESC")
+			return e
+		}
+
+		if titleOnly {
+			e.conditions = append(e.conditions, fmt.Sprintf("to_tsvector(coalesce(e.title, '')) @@ plainto_tsquery($%d)", nArgs))
+			e.args = append(e.args, query)
+			e.WithSorting(
+				fmt.Sprintf("ts_rank(to_tsvector(coalesce(e.title, '')), plainto_tsquery($%d)) - extract (epoch from now() - published_at)::float * 0.0000001", nArgs),
+				"DESC",
+			)
+			return e
+		}
+
 		e.conditions = append(e.conditions, fmt.Sprintf("e.document_vectors @@ plainto_tsquery($%d)", nArgs))
 		e.args = append(e.args, query)
 
@@ -149,6 +171,15 @@ func (e *EntryQueryBuilder) WithCategoryID(categoryID int64) *EntryQueryBuilder 
 	if categoryID > 0 {
 		e.conditions = append(e.conditions, "f.category_id = $"+strconv.Itoa(len(e.args)+1))
 		e.args = append(e.args, categoryID)
+	}
+	return e
+}
+
+// WithCategoryIDs filter by multiple category IDs.
+func (e *EntryQueryBuilder) WithCategoryIDs(categoryIDs []int64) *EntryQueryBuilder {
+	if len(categoryIDs) > 0 {
+		e.conditions = append(e.conditions, fmt.Sprintf("f.category_id = ANY($%d)", len(e.args)+1))
+		e.args = append(e.args, pq.Int64Array(categoryIDs))
 	}
 	return e
 }

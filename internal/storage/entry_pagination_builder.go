@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/lib/pq"
+
 	"miniflux.app/v2/internal/model"
 )
 
@@ -22,11 +24,24 @@ type entryPaginationBuilder struct {
 	direction  string
 }
 
-// WithSearchQuery adds full-text search query to the condition.
-func (e *entryPaginationBuilder) WithSearchQuery(query string) {
+// WithSearchQuery adds a search query to the condition.
+func (e *entryPaginationBuilder) WithSearchQuery(query string, useLikeSearch bool, titleOnly bool) {
 	if query != "" {
-		e.conditions = append(e.conditions, fmt.Sprintf("e.document_vectors @@ plainto_tsquery($%d)", len(e.args)+1))
-		e.args = append(e.args, query)
+		if useLikeSearch {
+			if titleOnly {
+				e.conditions = append(e.conditions, fmt.Sprintf("e.title ILIKE $%d", len(e.args)+1))
+			} else {
+				e.conditions = append(e.conditions, fmt.Sprintf("(e.title ILIKE $%[1]d OR coalesce(e.content, '') ILIKE $%[1]d)", len(e.args)+1))
+			}
+			e.args = append(e.args, "%"+query+"%")
+		} else {
+			if titleOnly {
+				e.conditions = append(e.conditions, fmt.Sprintf("to_tsvector(coalesce(e.title, '')) @@ plainto_tsquery($%d)", len(e.args)+1))
+			} else {
+				e.conditions = append(e.conditions, fmt.Sprintf("e.document_vectors @@ plainto_tsquery($%d)", len(e.args)+1))
+			}
+			e.args = append(e.args, query)
+		}
 	}
 }
 
@@ -48,6 +63,14 @@ func (e *entryPaginationBuilder) WithCategoryID(categoryID int64) {
 	if categoryID != 0 {
 		e.conditions = append(e.conditions, "f.category_id = $"+strconv.Itoa(len(e.args)+1))
 		e.args = append(e.args, categoryID)
+	}
+}
+
+// WithCategoryIDs adds multiple category_ids to the condition.
+func (e *entryPaginationBuilder) WithCategoryIDs(categoryIDs []int64) {
+	if len(categoryIDs) > 0 {
+		e.conditions = append(e.conditions, fmt.Sprintf("f.category_id = ANY($%d)", len(e.args)+1))
+		e.args = append(e.args, pq.Int64Array(categoryIDs))
 	}
 }
 

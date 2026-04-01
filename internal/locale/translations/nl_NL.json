@@ -603,6 +603,11 @@
     "pagination.previous": "Vorige",
     "search.label": "Zoeken",
     "search.placeholder": "Zoeken...",
+    "search.use_like": "Use partial match search",
+    "search.title_only": "Search titles only",
+    "search.filter_categories": "Filter by categories",
+    "search.categories_select_all": "Select all categories",
+    "search.categories_clear": "Clear categories",
     "search.submit": "Zoeken",
     "skip_to_content": "Ga naar inhoud",
     "time_elapsed.days": [

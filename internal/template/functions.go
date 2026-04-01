@@ -126,6 +126,24 @@ func (f *funcMap) Map() template.FuncMap {
 					if v != 0 {
 						values.Set(key, strconv.FormatInt(v, 10))
 					}
+				case []string:
+					for _, item := range v {
+						if item != "" {
+							values.Add(key, item)
+						}
+					}
+				case []int:
+					for _, item := range v {
+						if item != 0 {
+							values.Add(key, strconv.Itoa(item))
+						}
+					}
+				case []int64:
+					for _, item := range v {
+						if item != 0 {
+							values.Add(key, strconv.FormatInt(item, 10))
+						}
+					}
 				case bool:
 					if v {
 						values.Set(key, "1")
@@ -146,6 +164,12 @@ func (f *funcMap) Map() template.FuncMap {
 			}
 
 			return "?" + encoded
+		},
+		"queryBool": func(v bool) string {
+			if v {
+				return "1"
+			}
+			return "0"
 		},
 
 		// These functions are overridden at runtime after parsing.

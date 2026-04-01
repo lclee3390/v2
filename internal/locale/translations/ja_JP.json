@@ -591,6 +591,11 @@
     "pagination.previous": "前",
     "search.label": "検索",
     "search.placeholder": "…を検索",
+    "search.use_like": "Use partial match search",
+    "search.title_only": "Search titles only",
+    "search.filter_categories": "Filter by categories",
+    "search.categories_select_all": "Select all categories",
+    "search.categories_clear": "Clear categories",
     "search.submit": "検索",
     "skip_to_content": "コンテンツへスキップ",
     "time_elapsed.days": [
