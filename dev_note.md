@@ -182,3 +182,35 @@ LISTEN_ADDR=0.0.0.0:8088 make run
 environment:
   - LISTEN_ADDR=0.0.0.0:8080
 ```
+
+同步 upstream 最新變更
+----------------------
+
+目的：把 upstream（miniflux/v2）的最新修正合入本地，同時保留自己的功能分支。
+
+```bash
+# 1. 拉取 upstream 最新內容
+git fetch upstream
+
+# 2. 更新本地 main
+git checkout main
+git merge upstream/main
+
+# 3. 回到功能分支，rebase 到最新 main 上
+git checkout my-search-features
+git rebase main
+
+# 4. 若有衝突，解決後繼續
+# git add <衝突檔案>
+# git rebase --continue
+
+# 5. 強制推送（rebase 會改寫 commit hash）
+git push origin my-search-features --force-with-lease
+git push origin main
+```
+
+注意事項：
+
+- 若切換分支前有未 commit 的修改，先 `git stash`，rebase 完再 `git stash pop`。
+- `--force-with-lease` 比 `--force` 安全，若遠端有別人的新 commit 會中止。
+- upstream remote 位址：`https://github.com/miniflux/v2.git`

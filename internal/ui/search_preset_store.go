@@ -5,6 +5,8 @@ package ui // import "miniflux.app/v2/internal/ui"
 
 import (
 	"encoding/json"
+	"errors"
+	"io/fs"
 	"os"
 	"sync"
 )
@@ -25,7 +27,7 @@ func (s *presetStore) load() ([]string, error) {
 	defer s.mu.Unlock()
 
 	data, err := os.ReadFile(s.path)
-	if os.IsNotExist(err) {
+	if errors.Is(err, fs.ErrNotExist) {
 		return []string{}, nil
 	}
 	if err != nil {
@@ -45,7 +47,7 @@ func (s *presetStore) add(keyword string) error {
 
 	var presets []string
 	data, err := os.ReadFile(s.path)
-	if err != nil && !os.IsNotExist(err) {
+	if err != nil && !errors.Is(err, fs.ErrNotExist) {
 		return err
 	}
 	if len(data) > 0 {
@@ -68,7 +70,7 @@ func (s *presetStore) remove(keyword string) error {
 	defer s.mu.Unlock()
 
 	data, err := os.ReadFile(s.path)
-	if os.IsNotExist(err) {
+	if errors.Is(err, fs.ErrNotExist) {
 		return nil
 	}
 	if err != nil {
@@ -89,6 +91,7 @@ func (s *presetStore) remove(keyword string) error {
 	return s.writeFile(filtered)
 }
 
+// writeFile must be called with s.mu held.
 func (s *presetStore) writeFile(presets []string) error {
 	data, err := json.MarshalIndent(presets, "", "  ")
 	if err != nil {

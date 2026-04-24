@@ -5,7 +5,11 @@
       "Bash(mv /tmp/makefile_clean.txt Makefile)",
       "Bash(grep -n \"entry_search\\\\|showSearchEntry\\\\|searchEntry\" internal/ui/*.go)",
       "Bash(go build:*)",
-      "Bash(grep -rn \"Set\\(\\\\\"entries\" internal/ui/*.go)"
+      "Bash(grep -rn \"Set\\(\\\\\"entries\" internal/ui/*.go)",
+      "Read(//c/Users/sunli/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/skills/**)",
+      "Read(//mnt/e/02.workspace/miniflux/**)",
+      "Bash(git -C \"e:/02.workspace/miniflux/v2\" diff --stat 2a41c836cde2221d09d084332b7ca987df7e0552..9dd9188bcdc5a55a4253b38c6ba3d9b3c017034d)",
+      "Bash(git -C \"e:/02.workspace/miniflux/v2\" diff 2a41c836cde2221d09d084332b7ca987df7e0552..9dd9188bcdc5a55a4253b38c6ba3d9b3c017034d)"
     ]
   }
 }
