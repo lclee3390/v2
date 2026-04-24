@@ -561,6 +561,11 @@ func NewConfigOptions() *configOptions {
 					return validateGreaterOrEqualThan(rawValue, 1)
 				},
 			},
+			"SEARCH_PRESETS_FILE": {
+				parsedStringValue: "",
+				rawValue:          "",
+				valueType:         stringType,
+			},
 			"TRUSTED_REVERSE_PROXY_NETWORKS": {
 				parsedStringList: []string{},
 				rawValue:         "",
@@ -974,6 +979,10 @@ func (c *configOptions) SchedulerRoundRobinMaxInterval() time.Duration {
 
 func (c *configOptions) SchedulerRoundRobinMinInterval() time.Duration {
 	return c.options["SCHEDULER_ROUND_ROBIN_MIN_INTERVAL"].parsedDuration
+}
+
+func (c *configOptions) SearchPresetsFile() string {
+	return c.options["SEARCH_PRESETS_FILE"].parsedStringValue
 }
 
 func (c *configOptions) TrustedReverseProxyNetworks() []string {
