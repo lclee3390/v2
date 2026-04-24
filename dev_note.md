@@ -93,8 +93,11 @@ make lint
 make integration-test
 make clean-integration-test
 
-# 建立「lc」版 Docker 映像（tag: lc，並加上 lc 版 label）
+# 建立「lc」版 Docker 映像（tag: miniflux-lc:3.0.1）
 make docker-image-lc
+
+# 建立映像並匯出為 .tar 檔（miniflux-lc-3.0.1.tar）
+make docker-image-lc-tar
 ```
 
 整合測試使用 `psql` 與 `nc`（netcat），若缺少可安裝：

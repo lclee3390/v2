@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(head -182 Makefile)",
+      "Bash(mv /tmp/makefile_clean.txt Makefile)",
+      "Bash(grep -n \"entry_search\\\\|showSearchEntry\\\\|searchEntry\" internal/ui/*.go)",
+      "Bash(go build:*)",
+      "Bash(grep -rn \"Set\\(\\\\\"entries\" internal/ui/*.go)"
+    ]
+  }
+}
