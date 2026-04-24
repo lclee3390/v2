@@ -37,6 +37,20 @@
     {{ if not .entries }}
         <p role="alert" class="alert alert-info">{{ t "alert.no_search_result" }}</p>
     {{ else }}
+        <nav aria-label="{{ t "page.search.title" }} {{ t "menu.title" }}">
+            <ul>
+                <li>
+                    <button
+                        class="page-button"
+                        data-action="markPageAsRead"
+                        data-show-only-unread="1"
+                        data-label-question="{{ t "confirm.question" }}"
+                        data-label-yes="{{ t "confirm.yes" }}"
+                        data-label-no="{{ t "confirm.no" }}"
+                        data-label-loading="{{ t "confirm.loading" }}">{{ icon "mark-page-as-read" }}{{ t "menu.mark_page_as_read" }}</button>
+                </li>
+            </ul>
+        </nav>
         <div class="pagination-top">
             {{ template "pagination" .pagination }}
         </div>
