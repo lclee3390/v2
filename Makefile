@@ -1,10 +1,12 @@
 APP             := miniflux
 DOCKER_IMAGE    := miniflux/miniflux
 VERSION         := $(shell git describe --tags --exact-match 2>/dev/null)
+LC_VERSION      ?= 3.0.3
 LD_FLAGS        := "-s -w -X 'miniflux.app/v2/internal/version.Version=$(VERSION)'"
 PKG_LIST        := $(shell go list ./... | grep -v /vendor/)
 DB_URL          := postgres://postgres:postgres@localhost/miniflux_test?sslmode=disable
 DOCKER_PLATFORM := amd64
+DOCKER_IMAGE_DIR := docker-images
 
 export PGPASSWORD := postgres
 
@@ -31,6 +33,9 @@ export PGPASSWORD := postgres
 	clean-integration-test \
 	docker-image \
 	docker-image-distroless \
+	docker-image-lc \
+	docker-image-lc-tar \
+	docker-image-lc-release \
 	docker-images \
 	rpm \
 	debian \
@@ -134,6 +139,15 @@ clean-integration-test:
 
 docker-image:
 	docker build --pull -t $(DOCKER_IMAGE):$(VERSION) -f packaging/docker/alpine/Dockerfile .
+
+docker-image-lc:
+	docker build -t miniflux-lc:$(LC_VERSION) -f packaging/docker/alpine/Dockerfile .
+
+docker-image-lc-tar: docker-image-lc
+	@ mkdir -p $(DOCKER_IMAGE_DIR)
+	docker save miniflux-lc:$(LC_VERSION) -o $(DOCKER_IMAGE_DIR)/miniflux-lc-$(LC_VERSION).tar
+
+docker-image-lc-release: docker-image-lc docker-image-lc-tar
 
 docker-image-distroless:
 	docker build -t $(DOCKER_IMAGE):$(VERSION) -f packaging/docker/distroless/Dockerfile .
