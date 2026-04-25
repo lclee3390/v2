@@ -109,7 +109,8 @@ func (h *handler) showSearchPage(w http.ResponseWriter, r *http.Request) {
 	view.Set("categories", categories)
 
 	var searchPresets []string
-	if globalPresetStore != nil {
+	searchPresetsEnabled := globalPresetStore != nil
+	if searchPresetsEnabled {
 		presets, err := globalPresetStore.load()
 		if err != nil {
 			response.HTMLServerError(w, r, err)
@@ -117,6 +118,7 @@ func (h *handler) showSearchPage(w http.ResponseWriter, r *http.Request) {
 		}
 		searchPresets = presets
 	}
+	view.Set("searchPresetsEnabled", searchPresetsEnabled)
 	view.Set("searchPresets", searchPresets)
 
 	response.HTML(w, r, view.Render("search"))

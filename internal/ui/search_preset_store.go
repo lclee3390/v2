@@ -61,6 +61,9 @@ func (s *presetStore) add(keyword string) error {
 			return nil
 		}
 	}
+	if len(presets) >= 100 {
+		return nil
+	}
 	presets = append(presets, keyword)
 	return s.writeFile(presets)
 }
@@ -97,5 +100,9 @@ func (s *presetStore) writeFile(presets []string) error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(s.path, data, 0644)
+	tmp := s.path + ".tmp"
+	if err := os.WriteFile(tmp, data, 0644); err != nil {
+		return err
+	}
+	return os.Rename(tmp, s.path)
 }

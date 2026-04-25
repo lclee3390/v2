@@ -17,6 +17,10 @@ func (h *handler) addSearchPreset(w http.ResponseWriter, r *http.Request) {
 		response.HTMLRedirect(w, r, h.routePath("/search"))
 		return
 	}
+	if len(keyword) > 200 {
+		response.HTMLRedirect(w, r, h.routePath("/search"))
+		return
+	}
 	if globalPresetStore == nil {
 		response.HTMLServerError(w, r, errors.New("search preset store not initialised"))
 		return

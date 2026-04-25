@@ -33,7 +33,7 @@
     </form>
 </search>
 
-{{ if .searchPresets }}
+{{ if .searchPresetsEnabled }}
 <section class="search-presets">
     <ul class="search-preset-list">
         {{ range .searchPresets }}
@@ -42,7 +42,7 @@
             <form method="POST" action="{{ routePath "/search/presets/remove" }}" class="search-preset-remove-form">
                 <input type="hidden" name="csrf" value="{{ $.csrf }}">
                 <input type="hidden" name="keyword" value="{{ . }}">
-                <button type="submit" class="search-preset-remove" aria-label="Remove preset">×</button>
+                <button type="submit" class="search-preset-remove" aria-label="{{ t "search.preset.remove" }}">×</button>
             </form>
         </li>
         {{ end }}
@@ -50,7 +50,7 @@
     <form method="POST" action="{{ routePath "/search/presets/add" }}" class="search-preset-add-form">
         <input type="hidden" name="csrf" value="{{ .csrf }}">
         <input type="text" name="keyword" placeholder="{{ t "search.placeholder" }}" required>
-        <button type="submit" class="button button-muted">+</button>
+        <button type="submit" class="button button-muted" aria-label="{{ t "search.preset.add" }}">+</button>
     </form>
 </section>
 {{ end }}

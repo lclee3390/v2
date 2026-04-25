@@ -603,6 +603,8 @@
     "pagination.previous": "Previous",
     "search.label": "Search",
     "search.placeholder": "Search…",
+    "search.preset.add": "Add preset",
+    "search.preset.remove": "Remove preset",
     "search.use_like": "Use partial match search",
     "search.title_only": "Search titles only",
     "search.filter_categories": "Filter by categories",
