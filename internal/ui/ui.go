@@ -58,6 +58,13 @@ func Serve(store *storage.Storage, pool *worker.Pool) http.Handler {
 	mux.HandleFunc("GET /search", handler.showSearchPage)
 	mux.HandleFunc("GET /search/entry/{entryID}", handler.showSearchEntryPage)
 
+	// Search preset management (only when SEARCH_PRESETS_FILE is configured).
+	if config.Opts.SearchPresetsFile() != "" {
+		initPresetStore(config.Opts.SearchPresetsFile())
+		mux.HandleFunc("POST /search/presets/add", handler.addSearchPreset)
+		mux.HandleFunc("POST /search/presets/remove", handler.removeSearchPreset)
+	}
+
 	// Feed listing pages.
 	mux.HandleFunc("GET /feeds", handler.showFeedsPage)
 	mux.HandleFunc("GET /feeds/refresh", handler.refreshAllFeeds)
