@@ -38,7 +38,7 @@
     <ul class="search-preset-list">
         {{ range .searchPresets }}
         <li class="search-preset-item">
-            <a href="{{ routePath "/search" }}?q={{ . }}" class="search-preset-link">{{ . }}</a>
+            <a href="{{ routePath "/search" }}?q={{ . | urlquery }}" class="search-preset-link">{{ . }}</a>
             <form method="POST" action="{{ routePath "/search/presets/remove" }}" class="search-preset-remove-form">
                 <input type="hidden" name="csrf" value="{{ $.csrf }}">
                 <input type="hidden" name="keyword" value="{{ . }}">
